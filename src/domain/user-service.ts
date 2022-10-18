@@ -28,7 +28,10 @@ export const usersService = {
         }
 
         const createdNewUser = await usersRepository.createNewUser(createNewUser)
-        if (!createdNewUser) return null
+
+        if (!createdNewUser) {
+            return null
+        }
 
         return usersDBtoUserType(createdNewUser)
     },
@@ -54,8 +57,8 @@ export const usersService = {
         return await usersRepository.deleteUserById(id)
     },
 
-    async checkCredential(login: string, email: string, password: string): Promise<UserDBType | null> {
-        const user: UserDBType | null = await usersRepository.findUserByLoginOrEmail(login, email)
+    async checkCredential(login: string, password: string): Promise<UserDBType | null> {
+        const user: UserDBType | null = await usersRepository.findUserByLogin(login)
 
         if (!user) {
             return null
