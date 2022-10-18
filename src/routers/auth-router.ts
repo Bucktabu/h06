@@ -9,6 +9,7 @@ export const authRouter = Router({})
 authRouter.post('/login',
     ...authRouterValidationMiddleware,
     async (req: Request, res: Response) => {
+
         const user = await usersService.checkCredential(req.body.login, req.body.password)
         console.log('User: ', user)
         if (!user) {
