@@ -4,6 +4,7 @@ import {MongoClient} from 'mongodb';
 import {BlogType} from "../types/blogs-type";
 import {PostType} from "../types/posts-type";
 import {UserDBType} from "../types/user-type";
+import {CommentType} from "../types/comment-type";
 
 const mongoUri = process.env.MONGO_URI || 'mongodb://0.0.0.0:27017/?maxPoolSize=20&w=majority';
 
@@ -13,6 +14,7 @@ const db = client.db('blogsAndPostsDb')
 export const blogsCollection = db.collection<BlogType>('blogs')
 export const postsCollection = db.collection<PostType>('posts')
 export const usersCollection = db.collection<UserDBType>('users')
+export const commentsCollection = db.collection<CommentType>('comments')
 
 export async function runDb() {
     try {

@@ -20,13 +20,3 @@ export type UserDBType = WithId<{
 
 
 export type UsersDBType = UserDBType[]
-
-
-export const usersDBtoUserType = (userDB: UserDBType) => {
-    return {
-        id: userDB.id,
-        login: userDB.login,
-        email: userDB.email,
-        createdAt: userDB.createdAt
-    }
-}

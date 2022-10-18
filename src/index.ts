@@ -1,10 +1,13 @@
 import express from 'express'
-import {testingRouter} from "./routers/testing-router";
-import{blogsRouter} from "./routers/blogs-router"
-import{postsRouter} from "./routers/posts-router"
+
 import {authRouter} from "./routers/auth-router";
-import {runDb} from "./repositories/db";
+import{blogsRouter} from "./routers/blogs-router";
+import {commentsRouter} from "./routers/comments-router";
+import{postsRouter} from "./routers/posts-router"
+import {testingRouter} from "./routers/testing-router";
 import {usersRouter} from "./routers/users-router";
+
+import {runDb} from "./repositories/db";
 
 export const app = express()
 
@@ -12,11 +15,12 @@ const port = process.env.PORT || 5000
 
 app.use(express.json()) // add body-parser
 
-app.use('/testing', testingRouter)
-app.use('/blogs', blogsRouter)
-app.use('/posts', postsRouter)
-app.use('/users', usersRouter)
 app.use('/auth', authRouter)
+app.use('/blogs', blogsRouter)
+app.use('/comments', commentsRouter)
+app.use('/posts', postsRouter)
+app.use('/testing', testingRouter)
+app.use('/users', usersRouter)
 
 const startApp = async () => {
     await runDb()
