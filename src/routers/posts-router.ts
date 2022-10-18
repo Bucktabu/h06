@@ -39,7 +39,7 @@ postsRouter.post('/',
             return res.sendStatus(404)
         }
 
-        res.status(201).send(newPost)
+        return res.status(201).send(newPost)
     }
 )
 
@@ -55,7 +55,9 @@ postsRouter.post('/:id/comments',
             return res.sendStatus(404)
         }
 
-        const createComment = commentsService.createNewComment(req.body.content, req.user!)
+        const createdComment = await commentsService.createNewComment(req.body.content, req.user!)
+
+        return res.status(201).send(createdComment)
     }
 )
 
