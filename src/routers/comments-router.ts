@@ -14,7 +14,7 @@ commentsRouter.put('/:id', // commentId
     async (req: RequestWithParams<URIParameters>,
            res: Response<CommentType>) => {
 
-        const isUpdate = await commentsService.updateComment(req.params.id, req.body.content)
+        const isUpdate = await commentsService.updateComment(req.user!.id, req.body.content)
 
         if (!isUpdate) {
             return res.sendStatus(404)
