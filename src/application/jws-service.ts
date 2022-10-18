@@ -16,6 +16,5 @@ export const jwsService = {
         } catch (error) {
             return null
         }
-
     }
 }

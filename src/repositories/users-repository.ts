@@ -1,7 +1,7 @@
 import {usersCollection} from "./db";
 import {UserDBType, UsersType} from "../types/user-type";
 import {giveSkipNumber} from "../helperFunctions";
-import {resolveSrv} from "dns";
+import {ObjectId} from "mongodb";
 
 export const usersRepository = {
     async createNewUser(newUser: UserDBType): Promise<UserDBType | null> {
@@ -20,16 +20,6 @@ export const usersRepository = {
                     searchLoginTerm: string,
                     searchEmailTerm: string): Promise<UsersType> {
 
-        // const filter: any = {}
-        //
-        // if (searchLoginTerm) {
-        //     filter.login = {$regex: searchLoginTerm, $options: 'i'}
-        // }
-        //
-        // if (searchEmailTerm) {
-        //     filter.email = {$regex: searchEmailTerm, $options: 'i'}
-        // }
-
         return await usersCollection
             .find({
                 $or: [{login: {$regex: searchLoginTerm, $options: 'i'}}, {
@@ -46,24 +36,15 @@ export const usersRepository = {
     },
 
     async giveTotalCount(searchLoginTerm: string, searchEmailTerm: string): Promise<number> {
-
-        // if (searchLoginTerm) {
-        //     return await blogsCollection.countDocuments({login: {$regex: searchLoginTerm, $options: 'i'}})
-        // }
-        //
-        // if (searchEmailTerm) {
-        //     return await blogsCollection.countDocuments({email: {$regex: searchEmailTerm, $options: 'i'}})
-        // }
-
         return await usersCollection.countDocuments({$or: [{login: {$regex: searchLoginTerm, $options: 'i'}}, {email: {$regex: searchEmailTerm, $options: 'i'}}]})
     },
 
-    // async giveUserById(userId: string): Promise<UserType | null> {
-    //     return await usersCollection.findOne({id: userId})
-    // },
+    async giveUserById(id: ObjectId): Promise<UserDBType | null> {
+        return await usersCollection.findOne({_id: id})
+    },
 
     async findUserByLoginOrEmail(login: string, email: string) {
-        return await usersCollection.findOne({$or: [{email: login}, {login: email}]})
+        return await usersCollection.findOne({$or: [{email: login, $options: 'i'}, {login: email, $options: 'i'}]})
     },
 
     async deleteUserById(id: string): Promise<boolean> {

@@ -27,9 +27,9 @@ export const usersService = {
         return usersDBtoUserType(createdNewUser)
     },
 
-    // async giveUserById(userId: string): Promise<UserType | null> {
-    //     return await usersRepository.giveUserById(userId)
-    // },
+    async giveUserById(id: ObjectId): Promise<UserDBType | null> {
+        return usersRepository.giveUserById(id)
+    },
 
     async giveUsersPage(sortBy: string,
                         sortDirection: string,
@@ -39,7 +39,6 @@ export const usersService = {
                         searchEmailTerm: string): Promise<ContentPageType> {
 
         const contentDB = await usersRepository.giveUsers(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
-        // const content = contentDB.map(userDB => usersDBtoUserType(userDB))
         const totalCount = await usersRepository.giveTotalCount(searchLoginTerm, searchEmailTerm)
 
         return paginationContentPage(pageNumber, pageSize, contentDB, totalCount)
@@ -49,24 +48,23 @@ export const usersService = {
         return await usersRepository.deleteUserById(id)
     },
 
-    async checkCredential(login: string, email: string, password: string): Promise<boolean> {
+    async checkCredential(login: string, email: string, password: string): Promise<UserDBType | null> {
         const user: UserDBType | null = await usersRepository.findUserByLoginOrEmail(login, email)
 
         if (!user) {
-            return false
+            return null
         }
 
         const passwordHash = await this._generateHash(password, user.passwordSalt)
 
         if (user.passwordHash !== passwordHash) {
-            return false
+            return null
         }
 
-        return true
+        return user
     },
 
     async _generateHash(password: string, salt: string) {
-        const hash = await bcrypt.hash(password, salt)
-        return hash
+        return await bcrypt.hash(password, salt)
     }
 }
