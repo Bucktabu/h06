@@ -8,7 +8,7 @@ import {URIParameters} from "../models/URIParameters";
 
 export const commentsRouter = Router({})
 
-commentsRouter.put('/:commentId',
+commentsRouter.put('/:id', // commentId
     authMiddleware,
     commentsValidation,
     async (req: RequestWithParams<URIParameters>,
@@ -22,21 +22,24 @@ commentsRouter.put('/:commentId',
 
         const comment = await commentsService.giveCommentById(req.params.id)
         return res.status(204).send(comment!)
-    })
+    }
+)
 
-commentsRouter.get('/:id',
+commentsRouter.get('/:id', // commentId
     async (req: RequestWithParams<URIParameters>,
                    res: Response<CommentType>) => {
-    const comment = await commentsService.giveCommentById(req.params.id)
 
-    if (!comment) {
-        return res.sendStatus(404)
+        const comment = await commentsService.giveCommentById(req.params.id)
+
+        if (!comment) {
+            return res.sendStatus(404)
+        }
+
+        return res.status(200).send(comment)
     }
+)
 
-    return res.status(200).send(comment)
-})
-
-commentsRouter.delete('/:commentsId',
+commentsRouter.delete('/:id', // commentId
     authMiddleware,
     async (req: RequestWithParams<URIParameters>,
            res: Response) => {
@@ -48,4 +51,5 @@ commentsRouter.delete('/:commentsId',
         }
 
         return res.sendStatus(204)
-    })
+    }
+)

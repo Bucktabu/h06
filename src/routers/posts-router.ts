@@ -4,19 +4,26 @@ import {postRouterValidation} from "../middlewares/postRouter-validation-middlew
 import {authenticationGuardMiddleware} from "../middlewares/authentication-guard-middleware";
 import {queryValidationMiddleware} from "../middlewares/query-validation-middleware";
 
+import {commentsService} from "../domain/comments-servise";
 import {postsService} from "../domain/posts-service";
 
 import {QueryParameters} from "../models/queryParameters";
 import {PostsCreateNewPost} from "../models/postsCreateNewPost";
 import {PostsUpdatePost} from "../models/postsUpdatePost";
 import {URIParameters} from "../models/URIParameters";
+import {CreateNewComment} from "../models/postCreateNewComment"
 
+import {CommentType} from "../types/comment-type";
 import {PostType} from "../types/posts-type";
 import {ContentPageType} from "../types/content-page-type";
-import {RequestWithBody,
-        RequestWithParams,
-        RequestWithParamsAndBody,
-        RequestWithQuery} from "../types/request-types";
+import {
+    RequestWithBody,
+    RequestWithParams,
+    RequestWithParamsAndBody, RequestWithParamsAndQuery,
+    RequestWithQuery
+} from "../types/request-types";
+import {authMiddleware} from "../middlewares/auth-middleware";
+import {commentsValidation} from "../middlewares/commentRouter-validation-middleware";
 
 export const postsRouter = Router({})
 
@@ -36,39 +43,77 @@ postsRouter.post('/',
     }
 )
 
+postsRouter.post('/:id/comments',
+    authMiddleware,
+    commentsValidation,
+    async (req: RequestWithParamsAndBody<URIParameters, CreateNewComment>,
+           res: Response<CommentType>) => {
+
+        const post = postsService.givePostById(req.params.id)
+
+        if (!post) {
+            return res.sendStatus(404)
+        }
+
+        const createComment = commentsService.createNewComment(req.body.content, req.user!)
+    }
+)
+
 postsRouter.get('/',
     ...queryValidationMiddleware,
     async (req: RequestWithQuery<QueryParameters>,
            res: Response<ContentPageType>) => {
 
-    const pageWithPosts: ContentPageType = await postsService
-        .givePostsPage(req.query.sortBy,
-                       req.query.sortDirection,
-                       req.query.pageNumber,
-                       req.query.pageSize,
-                       req.query.blogId)
+        const pageWithPosts: ContentPageType = await postsService
+            .givePostsPage(req.query.sortBy,
+                           req.query.sortDirection,
+                           req.query.pageNumber,
+                           req.query.pageSize,
+                           req.query.blogId)
 
-    if (!pageWithPosts) {
-        return res.sendStatus(404)
+        if (!pageWithPosts) {
+            return res.sendStatus(404)
+        }
+
+        res.status(200).send(pageWithPosts)
     }
+)
 
-    res.status(200).send(pageWithPosts)
-})
-
-postsRouter.get('/:id',
+postsRouter.get('/:id', // postId
     async (req: RequestWithParams<URIParameters>,
                    res: Response<PostType>) => {
 
-    const post = await postsService.givePostById(req.params.id)
+        const post = await postsService.givePostById(req.params.id)
 
-    if (!post) {
-        return res.sendStatus(404)
+        if (!post) {
+            return res.sendStatus(404)
+        }
+
+        res.status(200).send(post)
     }
+)
 
-    res.status(200).send(post)
-})
+postsRouter.get('/:id/comments', // postId
+    ...queryValidationMiddleware,
+    async (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
+           res: Response<ContentPageType>) => {
 
-postsRouter.put('/:id',
+        const pageWithComments: ContentPageType | null = await commentsService
+            .giveCommentsPage(req.query.sortBy,
+                              req.query.sortDirection,
+                              req.query.pageNumber,
+                              req.query.pageSize,
+                              req.params.id)
+
+        if (!pageWithComments) {
+            return res.sendStatus(404)
+        }
+
+        res.status(200).send(pageWithComments)
+    }
+)
+
+postsRouter.put('/:id', // postId
     authenticationGuardMiddleware,
     ...postRouterValidation,
     async (req: RequestWithParamsAndBody<URIParameters, PostsUpdatePost>,
@@ -90,7 +135,7 @@ postsRouter.put('/:id',
     }
 )
 
-postsRouter.delete('/:id',
+postsRouter.delete('/:id', // postId
     authenticationGuardMiddleware,
     async (req: RequestWithParams<URIParameters>,
            res: Response) => {

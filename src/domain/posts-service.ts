@@ -29,7 +29,7 @@ export const postsService = {
                         sortDirection: 'asc' | 'desc',
                         pageNumber: string,
                         pageSize: string,
-                        blogId?: string) : Promise<ContentPageType> {
+                        blogId?: string): Promise<ContentPageType> {
 
         const content = await postsRepository.givePosts(sortBy, sortDirection, pageNumber, pageSize, blogId)
         const totalCount = await postsRepository.giveTotalCount(blogId)

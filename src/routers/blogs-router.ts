@@ -37,7 +37,7 @@ blogsRouter.post('/',
     }
 )
 
-blogsRouter.post('/:id/posts',
+blogsRouter.post('/:id/posts', // blogId
     authenticationGuardMiddleware,
     ...postForBlogValidation,
     async (req: RequestWithParamsAndBody<URIParameters, BlogsCreateNewPost>,
@@ -73,7 +73,7 @@ blogsRouter.get('/',
     res.status(200).send(pageWithBlogs)
 })
 
-blogsRouter.get('/:id',
+blogsRouter.get('/:id', // blogId
     async (req: RequestWithParams<URIParameters>,
                    res: Response<BlogType>) => {
 

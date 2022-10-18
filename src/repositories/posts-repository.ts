@@ -24,7 +24,6 @@ export const postsRepository = {
     },
 
     async giveTotalCount(blogId: string | undefined): Promise<number> {
-
         return await postsCollection.countDocuments({blogId: {$regex: blogId ? blogId : '', $options: 'i'}})
     },
 

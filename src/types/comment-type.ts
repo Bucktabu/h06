@@ -5,3 +5,5 @@ export type CommentType = {
     userLogin: string,
     createdAt: string
 }
+
+export type CommentsType = CommentType[]

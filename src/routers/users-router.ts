@@ -44,7 +44,7 @@ usersRouter.get('/',
         return res.status(200).send(pageWithUsers)
     })
 
-usersRouter.delete('/:id',
+usersRouter.delete('/:id', // userId
     authenticationGuardMiddleware,
     async (req: RequestWithParams<URIParameters>, res: Response) => {
 
