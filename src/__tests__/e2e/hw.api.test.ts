@@ -78,8 +78,80 @@ describe('/posts', () => {
             pagesCount: 1,
             page: 1,
             pageSize: 10,
-            totalCount: 2,
+            totalCount: 1,
             items: [createdBlogs]
+        })
+    }) // откуда то берется еще один блог в массиве
+
+    it('Method GET with searchNameTerm=new&pageSize=2&sortBy=youtubeUrl&sortDirection=asc.' +
+             'Expected 200 - return page with blogs', async () => {
+        await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog1",
+                "youtubeUrl": "https://someurl4.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog2",
+                "youtubeUrl": "https://someurl3.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog3",
+                "youtubeUrl": "https://someurl2.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        await request(app)
+            .post('/blogs')
+            .send({
+                "name": "blog4",
+                "youtubeUrl": "https://someurl1.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        const expectBlogsPage = [
+            {
+                "name": "blog4",
+                "youtubeUrl": "https://someurl1.com"
+            },
+            {
+                "name": "new blog3",
+                "youtubeUrl": "https://someurl2.com"
+            },
+            {
+                "name": "new blog2",
+                "youtubeUrl": "https://someurl3.com"
+            },
+            {
+                "name": "new blog1",
+                "youtubeUrl": "https://someurl4.com"
+            }
+        ]
+
+        const createResponse = await request(app)
+            .get('/blogs?searchNameTerm=new&pageSize=2&sortBy=youtubeUrl&sortDirection=asc')
+            .expect(200)
+
+        const createdPageWithBlogs = createResponse.body
+
+        expect(createdPageWithBlogs).toEqual({
+            pagesCount: 1,
+            page: 2,
+            pageSize: 2,
+            totalCount: 3,
+            items: [expectBlogsPage]
         })
     })
 })
