@@ -5,7 +5,7 @@ import {settings} from "../settings";
 
 export const jwsService = {
     async createJWT(user: UserDBType) {
-        return jwt.sign({userId: user._id}, settings.JWT_SECRET, {expiresIn: '24h'})
+        return jwt.sign({userId: user._id}, settings.JWT_SECRET, {expiresIn: '720h'})
     },
 
     async getUserIdByToken(token: string) {
