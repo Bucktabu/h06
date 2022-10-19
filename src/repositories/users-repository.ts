@@ -44,7 +44,7 @@ export const usersRepository = {
     },
 
     async giveUserByLogin(login: string) {
-        return await usersCollection.findOne({login: login/*, $options: 'i'*/}) // ругаеся на игнорирование регистра
+        return await usersCollection.findOne({login: login}) // ругаеся на игнорирование регистра
     },
 
     async deleteUserById(id: string): Promise<boolean> {

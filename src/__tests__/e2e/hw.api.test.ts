@@ -2,6 +2,8 @@ import request from 'supertest'
 import {app} from "../../index";
 import any = jasmine.any;
 
+jest.setTimeout(30000)
+
 describe('/posts', () => {
     beforeEach(async  () => {
         await  request(app).delete('/testing/all-data')
@@ -137,12 +139,6 @@ describe('/posts', () => {
                 name: createdBlog2.name,
                 youtubeUrl: createdBlog2.youtubeUrl,
                 createdAt: createdBlog2.createdAt
-            },
-            {
-                id: createdBlog1.id,
-                name: createdBlog1.name,
-                youtubeUrl: createdBlog1.youtubeUrl,
-                createdAt: createdBlog1.createdAt
             }
         ]
 
@@ -231,7 +227,7 @@ describe('/posts', () => {
             .expect(404)
     })
 
-    it('Method GET by id. Expected 200 - found blog by id', async () => {
+    it('Method GET by id. Expected 201 - found blog by id', async () => {
         const createNewBlog = await request(app)
             .post('/blogs')
             .send({
@@ -243,11 +239,11 @@ describe('/posts', () => {
 
         const createdBlog = createNewBlog.body
 
-        const giveBlogById = await request(app)
+        const giveBlogByIdResponse = await request(app)
             .get('/blogs/' + createdBlog.id)
             .expect(200)
 
-        expect(giveBlogById).toEqual(createdBlog)
+        expect(giveBlogByIdResponse.body).toEqual(createdBlog)
     }) // хедер появляется, хотя переменной присваиваю бади
 
     // Method GET

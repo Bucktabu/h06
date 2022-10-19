@@ -64,9 +64,9 @@ export const usersService = {
             return null
         }
 
-        const passwordHash = await this._generateHash(password, user.passwordSalt)
-
-        if (user.passwordHash !== passwordHash) {
+        const passwordEqual = await bcrypt.compare(password, user.passwordHash)
+        console.log('passwordEqual', passwordEqual)
+        if (!passwordEqual) {
             return null
         }
 
