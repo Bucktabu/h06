@@ -3,7 +3,7 @@ import {app} from "../../index";
 import any = jasmine.any;
 
 describe('/posts', () => {
-    beforeAll(async  () => {
+    beforeEach(async  () => {
         await  request(app).delete('/testing/all-data')
     })
 
@@ -67,11 +67,11 @@ describe('/posts', () => {
         const createdBlogs = createNewBlog.body
         console.log(createdBlogs)
 
-        const createResponse = await request(app)
+        const givePageWithBlogs = await request(app)
             .get('/blogs')
             .expect(200)
 
-        const createdPageWithBlogs = createResponse.body
+        const createdPageWithBlogs = givePageWithBlogs.body
         console.log(createdPageWithBlogs)
 
         expect(createdPageWithBlogs).toEqual({
@@ -85,7 +85,7 @@ describe('/posts', () => {
 
     it('Method GET with searchNameTerm=new&pageSize=2&sortBy=youtubeUrl&sortDirection=asc.' +
              'Expected 200 - return page with blogs', async () => {
-        await request(app)
+        const createBlog1 = await request(app)
             .post('/blogs')
             .send({
                 "name": "new blog1",
@@ -94,7 +94,7 @@ describe('/posts', () => {
             .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
             .expect(201)
 
-        await request(app)
+        const createBlog2 = await request(app)
             .post('/blogs')
             .send({
                 "name": "new blog2",
@@ -103,7 +103,7 @@ describe('/posts', () => {
             .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
             .expect(201)
 
-        await request(app)
+        const createBlog3 = await request(app)
             .post('/blogs')
             .send({
                 "name": "new blog3",
@@ -112,7 +112,7 @@ describe('/posts', () => {
             .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
             .expect(201)
 
-        await request(app)
+        const createBlog4 = await request(app)
             .post('/blogs')
             .send({
                 "name": "blog4",
@@ -121,22 +121,28 @@ describe('/posts', () => {
             .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
             .expect(201)
 
-        const expectBlogsPage = [
+        const createdBlog1 = createBlog1.body
+        const createdBlog2 = createBlog2.body
+        const createdBlog3 = createBlog3.body
+
+        const expectItems = [
             {
-                "name": "blog4",
-                "youtubeUrl": "https://someurl1.com"
+                id: createdBlog3.id,
+                name: createdBlog3.name,
+                youtubeUrl: createdBlog3.youtubeUrl,
+                createdAt: createdBlog3.createdAt
             },
             {
-                "name": "new blog3",
-                "youtubeUrl": "https://someurl2.com"
+                id: createdBlog2.id,
+                name: createdBlog2.name,
+                youtubeUrl: createdBlog2.youtubeUrl,
+                createdAt: createdBlog2.createdAt
             },
             {
-                "name": "new blog2",
-                "youtubeUrl": "https://someurl3.com"
-            },
-            {
-                "name": "new blog1",
-                "youtubeUrl": "https://someurl4.com"
+                id: createdBlog1.id,
+                name: createdBlog1.name,
+                youtubeUrl: createdBlog1.youtubeUrl,
+                createdAt: createdBlog1.createdAt
             }
         ]
 
@@ -147,11 +153,167 @@ describe('/posts', () => {
         const createdPageWithBlogs = createResponse.body
 
         expect(createdPageWithBlogs).toEqual({
-            pagesCount: 1,
+            pagesCount: 2,
+            page: 1,
+            pageSize: 2,
+            totalCount: 3,
+            items: expectItems
+        })
+    })
+
+    it('Method GET with searchNameTerm=new&pageSize=2&sortBy=youtubeUrl&sortDirection=asc&pageNumber=2.' +
+        'Expected 200 - return page with blogs', async () => {
+        const createBlog1 = await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog1",
+                "youtubeUrl": "https://someurl4.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        const createBlog2 = await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog2",
+                "youtubeUrl": "https://someurl3.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        const createBlog3 = await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog3",
+                "youtubeUrl": "https://someurl2.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        const createBlog4 = await request(app)
+            .post('/blogs')
+            .send({
+                "name": "blog4",
+                "youtubeUrl": "https://someurl1.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        const createdBlog1 = createBlog1.body
+
+        const expectItems = [
+            {
+                id: createdBlog1.id,
+                name: createdBlog1.name,
+                youtubeUrl: createdBlog1.youtubeUrl,
+                createdAt: createdBlog1.createdAt
+            }
+        ]
+
+        const createResponse = await request(app)
+            .get('/blogs?searchNameTerm=new&pageSize=2&sortBy=youtubeUrl&sortDirection=asc&pageNumber=2')
+            .expect(200)
+
+        const createdPageWithBlogs = createResponse.body
+
+        expect(createdPageWithBlogs).toEqual({
+            pagesCount: 2,
             page: 2,
             pageSize: 2,
             totalCount: 3,
-            items: [expectBlogsPage]
+            items: expectItems
         })
+    })
+
+    it('Method GET by id. Expected 404 - blog not found', async () => {
+        await request(app)
+            .get('/blogs/' + '0')
+            .expect(404)
+    })
+
+    it('Method GET by id. Expected 200 - found blog by id', async () => {
+        const createNewBlog = await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog",
+                "youtubeUrl": "https://someurl.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        const createdBlog = createNewBlog.body
+
+        const giveBlogById = await request(app)
+            .get('/blogs/' + createdBlog.id)
+            .expect(200)
+
+        expect(giveBlogById).toEqual(createdBlog)
+    }) // хедер появляется, хотя переменной присваиваю бади
+
+    // Method GET
+
+    it('Method PUT by id. Expected 401 - unauthorized', async () => {
+        await request(app)
+            .put('/blogs/' + '0')
+            .send({
+                "name": "old blog",
+                "youtubeUrl": "https://someoldurl.com"
+            })
+            .expect(401)
+    })
+
+    it('Method PUT by id. Expected 404 - blog not found', async () => {
+        await request(app)
+            .put('/blogs/' + '0')
+            .send({
+                "name": "old blog",
+                "youtubeUrl": "https://someoldurl.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(404)
+    })
+
+    it('Method PUT by id. Expected 400 - bad request', async () => {
+        const createNewBlog = await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog",
+                "youtubeUrl": "https://someurl.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        const createdBlog = createNewBlog.body
+
+        await request(app)
+            .put('/blogs/' + createdBlog.id)
+            .send({
+                "name": "",
+                "youtubeUrl": ""
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(400)
+    })
+
+    it('Method PUT by id. Expected 204 - update blog', async () => {
+        const createNewBlog = await request(app)
+            .post('/blogs')
+            .send({
+                "name": "new blog",
+                "youtubeUrl": "https://someurl.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
+
+        const createdBlog = createNewBlog.body
+
+        await request(app)
+            .put('/blogs/' + createdBlog.id)
+            .send({
+                "name": "old blog",
+                "youtubeUrl": "https://someoldurl.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(204)
     })
 })
