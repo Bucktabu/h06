@@ -1,11 +1,11 @@
 import * as dotenv from "dotenv";
 dotenv.config()
 
-import {MongoClient} from 'mongodb';
 import {BlogType} from "../types/blogs-type";
+import {CommentType} from "../types/comment-type";
+import {MongoClient} from 'mongodb';
 import {PostType} from "../types/posts-type";
 import {UserDBType} from "../types/user-type";
-import {CommentType} from "../types/comment-type";
 
 const mongoUri = process.env.MONGO_URI || 'mongodb://0.0.0.0:27017/?maxPoolSize=20&w=majority';
 

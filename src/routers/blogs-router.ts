@@ -66,10 +66,6 @@ blogsRouter.get('/',
                        req.query.pageNumber,
                        req.query.pageSize)
 
-    if (!pageWithBlogs) {
-        return res.sendStatus(404)
-    }
-
     res.status(200).send(pageWithBlogs)
 })
 

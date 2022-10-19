@@ -58,7 +58,7 @@ export const usersService = {
     },
 
     async checkCredential(login: string, password: string): Promise<UserDBType | null> {
-        const user: UserDBType | null = await usersRepository.findUserByLogin(login)
+        const user: UserDBType | null = await usersRepository.giveUserByLogin(login)
 
         if (!user) {
             return null

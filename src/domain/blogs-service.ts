@@ -24,6 +24,7 @@ export const blogsService = {
                         pageSize: string): Promise<ContentPageType> {
 
         const content = await blogsRepository.giveBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
+
         const totalCount = await blogsRepository.giveTotalCount(searchNameTerm)
 
         return paginationContentPage(pageNumber, pageSize, content, totalCount)
