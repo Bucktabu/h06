@@ -17,8 +17,8 @@ authRouter.post('/login',
         }
 
         const token = await jwsService.createJWT(user)
-        req.headers.authorization = token
-        return res.status(200).send(token)
+
+        return res.status(200).send({accessToken: token})
     }
 )
 
