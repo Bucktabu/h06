@@ -1,12 +1,16 @@
 import {postsCollection} from "./db";
 import {PostsType, PostType} from "../types/posts-type";
 import {giveSkipNumber} from "../helperFunctions";
+import {WithId} from "mongodb";
 
 export const postsRepository = {
-    async createNewPost(newPost: PostType): Promise<PostType> {
-        await postsCollection.insertOne(newPost)
-
-        return newPost
+    async createNewPost(newPost: PostType): Promise<PostType | null> {
+        try {
+            await postsCollection.insertOne(newPost)
+            return newPost
+        } catch (e) {
+            return null
+        }
     },
 
     async givePosts(sortBy: string,

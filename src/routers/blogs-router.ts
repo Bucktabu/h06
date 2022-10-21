@@ -33,6 +33,10 @@ blogsRouter.post('/',
 
         const newBlog = await blogsService.createNewBlog(req.body.name, req.body.youtubeUrl)
 
+        if (!newBlog) {
+            return res.sendStatus(404)
+        }
+
         res.status(201).send(newBlog)
     }
 )
@@ -50,7 +54,7 @@ blogsRouter.post('/:id/posts', // blogId
         }
 
         const newPost = await postsService.createNewPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id)
-        res.status(201).send(newPost)
+        res.status(201).send(newPost!)
     }
 )
 

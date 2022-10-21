@@ -3,10 +3,13 @@ import {BlogsType, BlogType} from "../types/blogs-type";
 import {giveSkipNumber} from "../helperFunctions";
 
 export const blogsRepository = {
-    async createNewBlog(newBlog: BlogType): Promise<BlogType> {
-        await blogsCollection.insertOne(newBlog)
-
-        return newBlog
+    async createNewBlog(newBlog: BlogType): Promise<BlogType | null> {
+        try {
+            await blogsCollection.insertOne(newBlog)
+            return newBlog
+        } catch (e) {
+            return null
+        }
     },
 
     async giveBlogs(searchNameTerm: string,

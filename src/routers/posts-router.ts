@@ -31,7 +31,7 @@ postsRouter.post('/',
     authenticationGuardMiddleware,
     ...postRouterValidation,
     async (req: RequestWithBody<PostsCreateNewPost>,
-           res: Response<PostType>) => {
+           res: Response<PostType | null>) => {
 
         const newPost = await postsService.createNewPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
 

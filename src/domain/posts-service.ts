@@ -4,12 +4,13 @@ import {PostType} from "../types/posts-type";
 import {ContentPageType} from "../types/content-page-type";
 
 import {paginationContentPage} from "../paginationContentPage";
+import {postBDtoPostType} from "../helperFunctions";
 
 export const postsService = {
     async createNewPost(title: string,
                         shortDescription: string,
                         content: string,
-                        blogId: string): Promise<PostType> {
+                        blogId: string): Promise<PostType | null> {
 
         const newPost: PostType = {
             id: String(+new Date()),
@@ -21,8 +22,13 @@ export const postsService = {
             createdAt: new Date().toISOString()
         }
 
-        await postsRepository.createNewPost({...newPost})
-        return newPost
+        const createdNewPost = await postsRepository.createNewPost(newPost)
+
+        if (!createdNewPost) {
+            return null
+        }
+
+        return postBDtoPostType(createdNewPost)
     },
 
     async givePostsPage(sortBy: string,

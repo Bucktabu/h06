@@ -2,9 +2,10 @@ import {blogsRepository} from "../repositories/blogs-repository";
 import {BlogType} from "../types/blogs-type";
 import {ContentPageType} from "../types/content-page-type";
 import {paginationContentPage} from "../paginationContentPage";
+import {blogDBtoBlogType} from "../helperFunctions";
 
 export const blogsService = {
-    async createNewBlog(name: string, youtubeUrl: string): Promise<BlogType> {
+    async createNewBlog(name: string, youtubeUrl: string): Promise<BlogType | null> {
 
         const newBlog: BlogType = {
             id: String(+new Date()),
@@ -13,8 +14,13 @@ export const blogsService = {
             createdAt: new Date().toISOString()
         }
 
-        await blogsRepository.createNewBlog({...newBlog})
-        return newBlog
+        const createdBlog = await blogsRepository.createNewBlog(newBlog)
+
+        if (!createdBlog) {
+            return null
+        }
+
+        return blogDBtoBlogType(createdBlog)
     },
 
     async giveBlogsPage(searchNameTerm: string,
