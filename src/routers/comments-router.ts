@@ -1,8 +1,8 @@
 import {Response, Router} from "express";
 import {commentsService} from "../domain/comments-servise";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {commentsValidation, commentsValidationMiddleware} from "../middlewares/commentRouter-validation-middleware";
-import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
+import {commentsValidationMiddleware} from "../middlewares/commentRouter-validation-middleware";
+import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
 import {CommentType} from "../types/comment-type";
 import {URIParameters} from "../models/URIParameters";
 

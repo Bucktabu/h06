@@ -96,7 +96,6 @@ postsRouter.get('/:id', // postId
 )
 
 postsRouter.get('/:id/comments', // postId
-    authMiddleware,
     ...queryValidationMiddleware,
     async (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
            res: Response<ContentPageType>) => {
