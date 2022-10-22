@@ -14,13 +14,13 @@ commentsRouter.put('/:id', // commentId
     async (req: RequestWithParamsAndBody<URIParameters, CommentType>,
            res: Response<CommentType>) => {
 
-        const giveComment = await commentsService.giveCommentById(req.params.id)
+        const comment = await commentsService.giveCommentById(req.params.id)
 
-        if (!giveComment) {
+        if (!comment) {
             return res.sendStatus(404)
         }
 
-        if (giveComment.userId !== req.user!.id) {
+        if (comment.userId !== req.user!.id) {
             return res.sendStatus(403) //	If try edit the comment that is not your own
         }
 
@@ -30,7 +30,6 @@ commentsRouter.put('/:id', // commentId
             return res.sendStatus(404)
         }
 
-        const comment = await commentsService.giveCommentById(req.params.id)
         return res.status(204).send(comment!)
     }
 )
@@ -54,13 +53,13 @@ commentsRouter.delete('/:id', // commentId
     async (req: RequestWithParams<URIParameters>,
            res: Response) => {
 
-        const giveComment = await commentsService.giveCommentById(req.params.id)
+        const comment = await commentsService.giveCommentById(req.params.id)
 
-        if (!giveComment) {
+        if (!comment) {
             return res.sendStatus(404)
         }
 
-        if (giveComment.userId !== req.user!.id) {
+        if (comment.userId !== req.user!.id) {
             return res.sendStatus(403) //	If try edit the comment that is not your own
         }
 
