@@ -2,7 +2,7 @@ import {Response, Router} from "express";
 import {commentsService} from "../domain/comments-servise";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {commentsValidation} from "../middlewares/commentRouter-validation-middleware";
-import {RequestWithParams} from "../types/request-types";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
 import {CommentType} from "../types/comment-type";
 import {URIParameters} from "../models/URIParameters";
 
@@ -11,8 +11,18 @@ export const commentsRouter = Router({})
 commentsRouter.put('/:id', // commentId
     authMiddleware,
     commentsValidation,
-    async (req: RequestWithParams<URIParameters>,
+    async (req: RequestWithParamsAndBody<URIParameters, CommentType>,
            res: Response<CommentType>) => {
+
+        const giveComment = await commentsService.giveCommentById(req.params.id)
+
+        if (!giveComment) {
+            return res.sendStatus(404)
+        }
+
+        if (giveComment.userId !== req.user!.id) {
+            return res.sendStatus(403) //	If try edit the comment that is not your own
+        }
 
         const isUpdate = await commentsService.updateComment(req.user!.id, req.body.content)
 
