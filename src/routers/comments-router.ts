@@ -56,11 +56,7 @@ commentsRouter.delete('/:id', // commentId
 
         const giveComment = await commentsService.giveCommentById(req.params.id)
 
-        if (!giveComment) {
-            return res.sendStatus(404)
-        }
-
-        if (giveComment.userId !== req.user!.id) {
+        if (giveComment!.userId !== req.user!.id) {
             return res.sendStatus(403) //	If try edit the comment that is not your own
         }
 
