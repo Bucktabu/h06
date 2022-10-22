@@ -1,7 +1,7 @@
 import {Response, Router} from "express";
 import {commentsService} from "../domain/comments-servise";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {commentsValidation} from "../middlewares/commentRouter-validation-middleware";
+import {commentsValidation, commentsValidationMiddleware} from "../middlewares/commentRouter-validation-middleware";
 import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
 import {CommentType} from "../types/comment-type";
 import {URIParameters} from "../models/URIParameters";
@@ -10,7 +10,7 @@ export const commentsRouter = Router({})
 
 commentsRouter.put('/:id', // commentId
     authMiddleware,
-    commentsValidation,
+    ...commentsValidationMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, CommentType>,
            res: Response<CommentType>) => {
 
@@ -53,6 +53,16 @@ commentsRouter.delete('/:id', // commentId
     authMiddleware,
     async (req: RequestWithParams<URIParameters>,
            res: Response) => {
+
+        const giveComment = await commentsService.giveCommentById(req.params.id)
+
+        if (!giveComment) {
+            return res.sendStatus(404)
+        }
+
+        if (giveComment.userId !== req.user!.id) {
+            return res.sendStatus(403) //	If try edit the comment that is not your own
+        }
 
         const isDeleted = await commentsService.deleteCommentById(req.params.id)
 

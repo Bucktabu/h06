@@ -1,29 +1,29 @@
 import {Response, Router} from "express";
 
-import {postRouterValidation} from "../middlewares/postRouter-validation-middleware";
 import {authenticationGuardMiddleware} from "../middlewares/authentication-guard-middleware";
+import {authMiddleware} from "../middlewares/auth-middleware";
+import {commentsValidationMiddleware} from "../middlewares/commentRouter-validation-middleware";
 import {queryValidationMiddleware} from "../middlewares/query-validation-middleware";
+import {postRouterValidation} from "../middlewares/postRouter-validation-middleware";
 
 import {commentsService} from "../domain/comments-servise";
 import {postsService} from "../domain/posts-service";
 
+import {CreateNewComment} from "../models/postCreateNewComment"
 import {QueryParameters} from "../models/queryParameters";
 import {PostsCreateNewPost} from "../models/postsCreateNewPost";
 import {PostsUpdatePost} from "../models/postsUpdatePost";
 import {URIParameters} from "../models/URIParameters";
-import {CreateNewComment} from "../models/postCreateNewComment"
 
 import {CommentType} from "../types/comment-type";
-import {PostType} from "../types/posts-type";
 import {ContentPageType} from "../types/content-page-type";
+import {PostType} from "../types/posts-type";
 import {
     RequestWithBody,
     RequestWithParams,
     RequestWithParamsAndBody, RequestWithParamsAndQuery,
     RequestWithQuery
 } from "../types/request-types";
-import {authMiddleware} from "../middlewares/auth-middleware";
-import {commentsValidation} from "../middlewares/commentRouter-validation-middleware";
 
 export const postsRouter = Router({})
 
@@ -45,7 +45,7 @@ postsRouter.post('/',
 
 postsRouter.post('/:id/comments',
     authMiddleware,
-    commentsValidation,
+    ...commentsValidationMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, CreateNewComment>,
            res: Response<CommentType>) => {
 
