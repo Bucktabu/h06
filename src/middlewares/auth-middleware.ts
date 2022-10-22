@@ -3,6 +3,7 @@ import {jwsService} from "../application/jws-service";
 import {usersService} from "../domain/user-service";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    debugger
     if (!req.headers.authorization) {
         return res.sendStatus(401)
     }
@@ -16,4 +17,5 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
     req.user = await usersService.giveUserById(userId)
     next()
+    return
 }

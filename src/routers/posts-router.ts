@@ -100,7 +100,7 @@ postsRouter.get('/:id/comments', // postId
     ...queryValidationMiddleware,
     async (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
            res: Response<ContentPageType>) => {
-
+        debugger
         const pageWithComments: ContentPageType | null = await commentsService
             .giveCommentsPage(req.query.sortBy,
                               req.query.sortDirection,
