@@ -1,8 +1,7 @@
-import {UserDBType} from "./types/user-type";
-import {WithId} from "mongodb";
-import {PostType} from "./types/posts-type";
-import {blogsRepository} from "./repositories/blogs-repository";
 import {BlogType} from "./types/blogs-type";
+import {PostType} from "./types/posts-type";
+import {UserDBType} from "./types/user-type";
+import {CommentBDType, CommentType} from "./types/comment-type";
 
 export const giveSkipNumber = (pageNumber: string,
                                pageSize: string) => {
@@ -49,6 +48,16 @@ export const postBDtoPostType = (postsBD: PostType) => {
         blogId: postsBD.blogId,
         blogName: postsBD.blogName,
         createdAt: postsBD.createdAt
+    }
+}
+
+export const commentBDtoCommentType = (commentBD: CommentBDType) => {
+    return {
+        id: commentBD.id,
+        content: commentBD.content,
+        userId: commentBD.userId,
+        userLogin: commentBD.userLogin,
+        createdAt: commentBD.createdAt
     }
 }
 

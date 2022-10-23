@@ -15,7 +15,7 @@ import {PostsCreateNewPost} from "../models/postsCreateNewPost";
 import {PostsUpdatePost} from "../models/postsUpdatePost";
 import {URIParameters} from "../models/URIParameters";
 
-import {CommentType} from "../types/comment-type";
+import {CommentBDType, CommentType} from "../types/comment-type";
 import {ContentPageType} from "../types/content-page-type";
 import {PostType} from "../types/posts-type";
 import {
@@ -55,7 +55,11 @@ postsRouter.post('/:id/comments',
             return res.sendStatus(404)
         }
 
-        const createdComment = await commentsService.createNewComment(req.body.content, req.user!)
+        const createdComment = await commentsService.createNewComment(req.params.id, req.body.content, req.user!)
+
+        if (!createdComment) {
+            return res.sendStatus(404)
+        }
 
         return res.status(201).send(createdComment)
     }

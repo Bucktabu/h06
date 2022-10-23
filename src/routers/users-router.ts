@@ -1,4 +1,4 @@
-import {Request, Response, Router} from "express";
+import {Response, Router} from "express";
 
 import {authenticationGuardMiddleware} from "../middlewares/authentication-guard-middleware";
 import {userRouterValidationMiddleware} from "../middlewares/userRouter-validation-middleware";
@@ -6,13 +6,12 @@ import {usersQueryValidationMiddleware} from "../middlewares/query-validation-mi
 
 import {usersService} from "../domain/user-service";
 
+import {CreateNewUser} from "../models/createNewUser";
 import {QueryParameters} from "../models/queryParameters";
 import {URIParameters} from "../models/URIParameters";
 
 import {ContentPageType} from "../types/content-page-type";
 import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/request-types";
-import {UserType} from "../types/user-type";
-import {CreateNewUser} from "../models/createNewUser";
 
 export const usersRouter = Router({})
 

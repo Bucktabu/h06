@@ -1,12 +1,15 @@
 import {commentsCollection, postsCollection} from "./db";
-import {CommentsType, CommentType} from "../types/comment-type";
-import {giveSkipNumber} from "../helperFunctions";
+import {CommentBDType, CommentsType, CommentType} from "../types/comment-type";
+import {commentBDtoCommentType, giveSkipNumber} from "../helperFunctions";
 
 export const commentsRepository = {
-    async createNewComment(newComment: CommentType): Promise<CommentType> {
-        await commentsCollection.insertOne(newComment)
-
-        return newComment
+    async createNewComment(newComment: CommentBDType): Promise<CommentBDType | null> {
+        try {
+            await commentsCollection.insertOne(newComment)
+            return newComment
+        } catch (e) {
+            return null
+        }
     },
 
     async updateComment(id: string, comment: string): Promise<boolean> {
@@ -15,7 +18,7 @@ export const commentsRepository = {
         return result.matchedCount === 1
     },
 
-    async giveCommentById(id: string): Promise<CommentType | null> {
+    async giveCommentById(id: string): Promise<CommentBDType | null> {
         return await commentsCollection.findOne({id: id}, {projection: {_id: false}})
     },
 
@@ -26,7 +29,7 @@ export const commentsRepository = {
                        postId: string | undefined): Promise<CommentsType> {
 
         return await commentsCollection
-            .find({userId: postId})
+            .find({postId: postId})
             .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
             .skip(giveSkipNumber(pageNumber, pageSize))
             .limit(Number(pageSize))
@@ -34,7 +37,7 @@ export const commentsRepository = {
     },
 
     async giveTotalCount(postId: string | undefined): Promise<number> {
-        return await commentsCollection.countDocuments({userId: postId}) // update later
+        return await commentsCollection.countDocuments({postId: postId}) //
     },
 
     async deleteCommentById(id: string): Promise<boolean> {
