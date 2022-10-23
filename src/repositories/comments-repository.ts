@@ -26,7 +26,7 @@ export const commentsRepository = {
                        postId: string | undefined): Promise<CommentsType> {
 
         return await commentsCollection
-            .find({id: postId})
+            .find({userId: postId})
             .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
             .skip(giveSkipNumber(pageNumber, pageSize))
             .limit(Number(pageSize))
@@ -34,7 +34,7 @@ export const commentsRepository = {
     },
 
     async giveTotalCount(postId: string | undefined): Promise<number> {
-        return await commentsCollection.countDocuments({id: postId})
+        return await commentsCollection.countDocuments({userId: postId}) // update later
     },
 
     async deleteCommentById(id: string): Promise<boolean> {
