@@ -13,7 +13,7 @@ commentsRouter.put('/:id', // commentId
     ...commentsValidationMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, CommentType>,
            res: Response<CommentType>) => {
-
+        debugger
         const comment = await commentsService.giveCommentById(req.params.id)
 
         if (!comment) {

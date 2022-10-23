@@ -33,16 +33,28 @@ export const commentsService = {
     },
 
     async giveCommentById(id: string): Promise<CommentType | null> {
-        return await commentsRepository.giveCommentById(id)
+        debugger
+        const comment = await commentsRepository.giveCommentById(id)
+
+        if (!comment) {
+            return null
+        }
+
+        return comment
     },
 
     async giveCommentsPage(sortBy: string,
                            sortDirection: 'asc' | 'desc',
                            pageNumber: string,
                            pageSize: string,
-                           userId: string): Promise<ContentPageType> {
+                           userId: string): Promise<ContentPageType | null> {
         debugger
         const commentsDB = await commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, userId)
+
+        if (!commentsDB) {
+            return null
+        }
+
         const comments = commentsDB.map(c => commentBDtoCommentType(c))
         const totalCount = await commentsRepository.giveTotalCount(userId)
 

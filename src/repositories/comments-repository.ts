@@ -14,18 +14,18 @@ export const commentsRepository = {
 
     async updateComment(id: string, comment: string): Promise<boolean> {
         const result = await commentsCollection.updateOne({id: id}, {$set:{content: comment}})
-
+        console.log(result.matchedCount)
         return result.matchedCount === 1
     },
 
     async giveCommentById(id: string): Promise<CommentType | null> {
-        const comment = await commentsCollection.findOne({id: id}, {projection: {_id: false}})
+        const comment = await commentsCollection.findOne({id: id}, {projection: {_id: false, postId: false}})
 
         if (!comment) {
             return null
         }
 
-        return commentBDtoCommentType(comment)
+        return comment
     },
 
     async giveComments(sortBy: string,
