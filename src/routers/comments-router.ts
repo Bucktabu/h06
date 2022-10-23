@@ -11,20 +11,20 @@ export const commentsRouter = Router({})
 commentsRouter.put('/:id', // commentId
     authMiddleware,
     ...commentsValidationMiddleware,
-    async (req: RequestWithParamsAndBody<URIParameters, CommentType>,
+    async(req: RequestWithParamsAndBody<URIParameters, CommentType>,
            res: Response<CommentType>) => {
-        debugger
+
         const comment = await commentsService.giveCommentById(req.params.id)
 
         if (!comment) {
             return res.sendStatus(404)
         }
 
-        if (comment.userId !== req.user!.id) {
+        if (comment!.userId !== req.user!.id) {
             return res.sendStatus(403) //	If try edit the comment that is not your own
         }
 
-        const isUpdate = await commentsService.updateComment(req.user!.id, req.body.content)
+        const isUpdate = await commentsService.updateComment(req.params.id, req.body.content)
 
         if (!isUpdate) {
             return res.sendStatus(404)

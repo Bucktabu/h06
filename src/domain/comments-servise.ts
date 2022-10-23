@@ -10,7 +10,6 @@ import {ObjectId} from "mongodb";
 export const commentsService = {
     async createNewComment(postId: string, comment: string, user: UserDBType): Promise<CommentType | null> {
         const newComment = {
-            _id: new ObjectId(),
             id: String(+new Date()),
             content: comment,
             userId: user.id,
@@ -33,7 +32,7 @@ export const commentsService = {
     },
 
     async giveCommentById(id: string): Promise<CommentType | null> {
-        debugger
+
         const comment = await commentsRepository.giveCommentById(id)
 
         if (!comment) {
@@ -56,6 +55,11 @@ export const commentsService = {
         }
 
         const comments = commentsDB.map(c => commentBDtoCommentType(c))
+
+        if (!comments) {
+            return null
+        }
+
         const totalCount = await commentsRepository.giveTotalCount(userId)
 
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)

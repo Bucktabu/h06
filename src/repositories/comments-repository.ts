@@ -1,6 +1,6 @@
 import {commentsCollection} from "./db";
 import {CommentBDType, CommentsType, CommentType} from "../types/comment-type";
-import {commentBDtoCommentType, giveSkipNumber} from "../helperFunctions";
+import {giveSkipNumber} from "../helperFunctions";
 
 export const commentsRepository = {
     async createNewComment(newComment: CommentBDType): Promise<CommentBDType | null> {
@@ -14,8 +14,8 @@ export const commentsRepository = {
 
     async updateComment(id: string, comment: string): Promise<boolean> {
         const result = await commentsCollection.updateOne({id: id}, {$set:{content: comment}})
-        console.log(result.matchedCount)
-        return result.matchedCount === 1
+
+        return result.modifiedCount === 1
     },
 
     async giveCommentById(id: string): Promise<CommentType | null> {

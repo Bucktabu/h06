@@ -5,13 +5,13 @@ import {settings} from "../settings";
 
 export const jwsService = {
     async createJWT(user: UserDBType) {
-        return jwt.sign({userId: user._id}, settings.JWT_SECRET, {expiresIn: '720h'})
+        return jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '720h'})
     },
 
     async getUserIdByToken(token: string) {
         try {
             const result: any = jwt.verify(token, settings.JWT_SECRET)
-            return new ObjectId(result.userId)
+            return result.userId
         } catch (error) {
             return null
         }

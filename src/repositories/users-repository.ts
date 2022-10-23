@@ -1,7 +1,6 @@
 import {usersCollection} from "./db";
 import {UserDBType, UsersType} from "../types/user-type";
 import {giveSkipNumber} from "../helperFunctions";
-import {ObjectId} from "mongodb";
 
 export const usersRepository = {
     async createNewUser(newUser: UserDBType): Promise<UserDBType | null> {
@@ -39,8 +38,8 @@ export const usersRepository = {
         return await usersCollection.countDocuments({$or: [{login: {$regex: searchLoginTerm, $options: 'i'}}, {email: {$regex: searchEmailTerm, $options: 'i'}}]})
     },
 
-    async giveUserById(id: ObjectId): Promise<UserDBType | null> {
-        return await usersCollection.findOne({_id: id})
+    async giveUserById(id: string): Promise<UserDBType | null> {
+        return await usersCollection.findOne({id: id})
     },
 
     async giveUserByLogin(login: string) {

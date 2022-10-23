@@ -10,11 +10,11 @@ export type CommentType = {
 
 export type CommentsType = CommentType[]
 
-export type CommentBDType = WithId<{
+export type CommentBDType = {
     id: string,
     content: string,
     userId: string,
     userLogin: string,
     createdAt: string,
     postId: string,
-}>
+}

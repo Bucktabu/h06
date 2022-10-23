@@ -18,7 +18,6 @@ export const usersService = {
         const passwordHash = await this._generateHash(password, passwordSalt)
 
         const createNewUser: UserDBType = {
-            _id: new ObjectId(),
             id: String(+new Date()),
             login,
             email,
@@ -36,7 +35,7 @@ export const usersService = {
         return usersDBtoUserType(createdNewUser)
     },
 
-    async giveUserById(id: ObjectId): Promise<UserDBType | null> {
+    async giveUserById(id: string): Promise<UserDBType | null> {
         return usersRepository.giveUserById(id)
     },
 

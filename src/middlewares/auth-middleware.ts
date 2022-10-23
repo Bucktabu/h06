@@ -9,12 +9,15 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
 
     const token = req.headers.authorization.split(' ')[1]
+
     const userId = await jwsService.getUserIdByToken(token)
 
     if (!userId) {
         return res.sendStatus(401)
     }
+    const user: any = await usersService.giveUserById(userId)
 
-    req.user = await usersService.giveUserById(userId)
+    req.user = user
+    res.locals = user
     next()
 }
