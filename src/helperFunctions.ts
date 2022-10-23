@@ -1,7 +1,7 @@
 import {BlogType} from "./types/blogs-type";
 import {PostType} from "./types/posts-type";
 import {UserDBType} from "./types/user-type";
-import {CommentBDType, CommentType} from "./types/comment-type";
+import {CommentType} from "./types/comment-type";
 
 export const giveSkipNumber = (pageNumber: string,
                                pageSize: string) => {

@@ -16,5 +16,4 @@ export type UserDBType = {
     createdAt: string
 }
 
-
 export type UsersDBType = UserDBType[]

@@ -47,19 +47,14 @@ export const commentsService = {
                            pageNumber: string,
                            pageSize: string,
                            userId: string): Promise<ContentPageType | null> {
-        debugger
-        const commentsDB = await commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, userId)
 
+        const commentsDB = await commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, userId)
+        console.log(commentsDB, 'here')
         if (!commentsDB) {
             return null
         }
 
         const comments = commentsDB.map(c => commentBDtoCommentType(c))
-
-        if (!comments) {
-            return null
-        }
-
         const totalCount = await commentsRepository.giveTotalCount(userId)
 
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)
