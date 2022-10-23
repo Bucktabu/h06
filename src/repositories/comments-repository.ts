@@ -32,7 +32,7 @@ export const commentsRepository = {
                        sortDirection: 'asc' | 'desc',
                        pageNumber: string,
                        pageSize: string,
-                       postId: string): Promise<CommentsType> {
+                       postId: string): Promise<CommentsType | null> {
 
         return await commentsCollection
             .find({postId: postId})
