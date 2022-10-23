@@ -51,7 +51,7 @@ export const postBDtoPostType = (postsBD: PostType) => {
     }
 }
 
-export const commentBDtoCommentType = (commentBD: CommentBDType) => {
+export const commentBDtoCommentType = (commentBD: CommentType) => { // непонимаю передаю БД тип, а писать нужно обычный
     return {
         id: commentBD.id,
         content: commentBD.content,

@@ -1,5 +1,5 @@
 import {commentsRepository} from "../repositories/comments-repository";
-import {CommentBDType, CommentType} from "../types/comment-type";
+import {CommentBDType, CommentsType, CommentType} from "../types/comment-type";
 import {UserDBType} from "../types/user-type";
 import {ContentPageType} from "../types/content-page-type";
 
@@ -40,16 +40,13 @@ export const commentsService = {
                            sortDirection: 'asc' | 'desc',
                            pageNumber: string,
                            pageSize: string,
-                           userId: string): Promise<ContentPageType | null> {
+                           userId: string): Promise<ContentPageType> {
         debugger
-        const content = await commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, userId)
+        const commentsDB = await commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, userId)
+        const comments = commentsDB.map(c => commentBDtoCommentType(c))
         const totalCount = await commentsRepository.giveTotalCount(userId)
 
-        if (!content) {
-            return null
-        }
-
-        return paginationContentPage(pageNumber, pageSize, content, totalCount)
+        return paginationContentPage(pageNumber, pageSize, comments, totalCount)
     },
 
     async deleteCommentById(id: string): Promise<boolean> {

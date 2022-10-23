@@ -1,4 +1,4 @@
-import {commentsCollection, postsCollection} from "./db";
+import {commentsCollection} from "./db";
 import {CommentBDType, CommentsType, CommentType} from "../types/comment-type";
 import {commentBDtoCommentType, giveSkipNumber} from "../helperFunctions";
 
@@ -18,15 +18,21 @@ export const commentsRepository = {
         return result.matchedCount === 1
     },
 
-    async giveCommentById(id: string): Promise<CommentBDType | null> {
-        return await commentsCollection.findOne({id: id}, {projection: {_id: false}})
+    async giveCommentById(id: string): Promise<CommentType | null> {
+        const comment = await commentsCollection.findOne({id: id}, {projection: {_id: false}})
+
+        if (!comment) {
+            return null
+        }
+
+        return commentBDtoCommentType(comment)
     },
 
     async giveComments(sortBy: string,
                        sortDirection: 'asc' | 'desc',
                        pageNumber: string,
                        pageSize: string,
-                       postId: string | undefined): Promise<CommentsType> {
+                       postId: string): Promise<CommentsType> {
 
         return await commentsCollection
             .find({postId: postId})

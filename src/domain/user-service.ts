@@ -47,10 +47,10 @@ export const usersService = {
                         searchLoginTerm: string,
                         searchEmailTerm: string): Promise<ContentPageType> {
 
-        const contentDB = await usersRepository.giveUsers(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
+        const users = await usersRepository.giveUsers(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
         const totalCount = await usersRepository.giveTotalCount(searchLoginTerm, searchEmailTerm)
 
-        return paginationContentPage(pageNumber, pageSize, contentDB, totalCount)
+        return paginationContentPage(pageNumber, pageSize, users, totalCount)
     },
 
     async deleteUserById(id: string): Promise<boolean> {
