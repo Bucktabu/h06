@@ -15,13 +15,14 @@ import {PostsCreateNewPost} from "../models/postsCreateNewPost";
 import {PostsUpdatePost} from "../models/postsUpdatePost";
 import {URIParameters} from "../models/URIParameters";
 
-import {CommentBDType, CommentType} from "../types/comment-type";
+import {CommentType} from "../types/comment-type";
 import {ContentPageType} from "../types/content-page-type";
 import {PostType} from "../types/posts-type";
 import {
     RequestWithBody,
     RequestWithParams,
-    RequestWithParamsAndBody, RequestWithParamsAndQuery,
+    RequestWithParamsAndBody,
+    RequestWithParamsAndQuery,
     RequestWithQuery
 } from "../types/request-types";
 
