@@ -6,9 +6,6 @@ import {jwsService} from "../application/jws-service";
 
 export const authRouter = Router({})
 
-const POST = authRouter.post
-const GET = authRouter.get
-
 authRouter.post('/login',
     authRouterValidation,
     async (req: Request, res: Response) => {

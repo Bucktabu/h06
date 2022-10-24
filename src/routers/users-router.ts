@@ -15,9 +15,6 @@ import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/req
 
 export const usersRouter = Router({})
 
-const POST = usersRouter.post
-const GET = usersRouter.get
-const DELETE = usersRouter.delete
 
 usersRouter.post('/',
     authenticationGuardMiddleware,

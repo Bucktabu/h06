@@ -50,7 +50,7 @@ postsRouter.post('/:id/comments', // postId
     async (req: RequestWithParamsAndBody<URIParameters, CreateNewComment>,
            res: Response<CommentType>) => {
 
-        const post = postsService.givePostById(req.params.id)
+        const post = await postsService.givePostById(req.params.id)
 
         if (!post) {
             return res.sendStatus(404)

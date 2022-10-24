@@ -9,10 +9,6 @@ import {URIParameters} from "../models/URIParameters";
 
 export const commentsRouter = Router({})
 
-const GET = commentsRouter.get
-const PUT = commentsRouter.put
-const DELETE = commentsRouter.delete
-
 commentsRouter.get('/:id', // commentId
     async (req: RequestWithParams<URIParameters>,
            res: Response<CommentType>) => {

@@ -25,11 +25,6 @@ import {RequestWithBody,
 
 export const blogsRouter = Router({})
 
-const POST = blogsRouter.post
-const GET = blogsRouter.get
-const PUT = blogsRouter.put
-const DELETE = blogsRouter.delete
-
 blogsRouter.post('/',
     authenticationGuardMiddleware,
     ...blogRouterValidation,
