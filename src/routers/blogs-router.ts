@@ -25,7 +25,12 @@ import {RequestWithBody,
 
 export const blogsRouter = Router({})
 
-blogsRouter.post('/',
+const POST = blogsRouter.post
+const GET = blogsRouter.get
+const PUT = blogsRouter.put
+const DELETE = blogsRouter.delete
+
+POST('/',
     authenticationGuardMiddleware,
     ...blogRouterValidation,
     async (req: RequestWithBody<BlogsCreateNewBlog>,
@@ -41,7 +46,7 @@ blogsRouter.post('/',
     }
 )
 
-blogsRouter.post('/:id/posts', // blogId
+POST('/:id/posts', // blogId
     authenticationGuardMiddleware,
     ...postForBlogValidation,
     async (req: RequestWithParamsAndBody<URIParameters, BlogsCreateNewPost>,
@@ -53,27 +58,33 @@ blogsRouter.post('/:id/posts', // blogId
             return res.sendStatus(404)
         }
 
-        const newPost = await postsService.createNewPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id)
+        const newPost = await postsService
+            .createNewPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id)
+
         res.status(201).send(newPost!)
     }
 )
 
-blogsRouter.get('/',
+GET('/',
     ...queryWithNameTermValidation,
     async (req: RequestWithQuery<QueryParameters>,
            res: Response<ContentPageType>) => {
 
-    const pageWithBlogs: ContentPageType = await blogsService
+    const pageWithBlogs: ContentPageType | null = await blogsService
         .giveBlogsPage(req.query.searchNameTerm,
                        req.query.sortBy,
                        req.query.sortDirection,
                        req.query.pageNumber,
                        req.query.pageSize)
 
-    res.status(200).send(pageWithBlogs)
+        if (!pageWithBlogs) {
+            return res.sendStatus(404)
+        }
+
+        res.status(200).send(pageWithBlogs)
 })
 
-blogsRouter.get('/:id', // blogId
+GET('/:id', // blogId
     async (req: RequestWithParams<URIParameters>,
                    res: Response<BlogType>) => {
 
@@ -86,7 +97,7 @@ blogsRouter.get('/:id', // blogId
     res.status(200).send(blog)
 })
 
-blogsRouter.get('/:id/posts',
+GET('/:id/posts',
     ...queryValidationMiddleware,
     async (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
            res: Response<ContentPageType>) => {
@@ -107,7 +118,7 @@ blogsRouter.get('/:id/posts',
     res.status(200).send(pageWithPosts)
 })
 
-blogsRouter.put('/:id',
+PUT('/:id',
     authenticationGuardMiddleware,
     ...blogRouterValidation,
     async (req: RequestWithParamsAndBody<URIParameters, BlogsUpdateBlog>,
@@ -124,7 +135,7 @@ blogsRouter.put('/:id',
     }
 )
 
-blogsRouter.delete('/:id',
+DELETE('/:id',
     authenticationGuardMiddleware,
     async (req: RequestWithParams<URIParameters>, res: Response) => {
 

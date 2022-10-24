@@ -12,14 +12,14 @@ export const commentsRepository = {
         }
     },
 
-    async updateComment(id: string, comment: string): Promise<boolean> {
-        const result = await commentsCollection.updateOne({id: id}, {$set:{content: comment}})
+    async updateComment(commentId: string, comment: string): Promise<boolean> {
+        const result = await commentsCollection.updateOne({id: commentId}, {$set:{content: comment}})
 
         return result.modifiedCount === 1
     },
 
-    async giveCommentById(id: string): Promise<CommentType | null> {
-        const comment = await commentsCollection.findOne({id: id}, {projection: {_id: false, postId: false}})
+    async giveCommentById(commentId: string): Promise<CommentType | null> {
+        const comment = await commentsCollection.findOne({id: commentId}, {projection: {_id: false, postId: false}})
 
         if (!comment) {
             return null
@@ -46,8 +46,8 @@ export const commentsRepository = {
         return await commentsCollection.countDocuments({postId: postId}) //
     },
 
-    async deleteCommentById(id: string): Promise<boolean> {
-        const result = await commentsCollection.deleteOne({id: id})
+    async deleteCommentById(commentId: string): Promise<boolean> {
+        const result = await commentsCollection.deleteOne({id: commentId})
 
         return result.deletedCount === 1
     },

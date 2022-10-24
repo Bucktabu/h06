@@ -46,8 +46,8 @@ export const usersRepository = {
         return await usersCollection.findOne({login: login}) // ругаеся на игнорирование регистра
     },
 
-    async deleteUserById(id: string): Promise<boolean> {
-        const result = await usersCollection.deleteOne({id: id})
+    async deleteUserById(userId: string): Promise<boolean> {
+        const result = await usersCollection.deleteOne({id: userId})
         return result.deletedCount === 1
     },
 

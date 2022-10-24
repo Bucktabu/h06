@@ -31,8 +31,8 @@ export const postsRepository = {
         return await postsCollection.countDocuments({blogId: {$regex: blogId ? blogId : '', $options: 'i'}})
     },
 
-    async givePostById(id: string): Promise<PostType | null> {
-       return await postsCollection.findOne({id:id}, {projection: {_id: false}})
+    async givePostById(postId: string): Promise<PostType | null> {
+       return await postsCollection.findOne({id: postId}, {projection: {_id: false}})
     },
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {

@@ -15,7 +15,11 @@ import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/req
 
 export const usersRouter = Router({})
 
-usersRouter.post('/',
+const POST = usersRouter.post
+const GET = usersRouter.get
+const DELETE = usersRouter.delete
+
+POST('/',
     authenticationGuardMiddleware,
     userRouterValidationMiddleware,
     async (req: RequestWithBody<CreateNewUser>, res: Response) => {
@@ -29,15 +33,16 @@ usersRouter.post('/',
         return res.status(201).send(newUser)
     })
 
-usersRouter.get('/',
+GET('/',
     ...usersQueryValidationMiddleware,
     async (req: RequestWithQuery<QueryParameters>, res: Response) => {
-        const pageWithUsers: ContentPageType = await usersService.giveUsersPage(req.query.sortBy,
-            req.query.sortDirection,
-            req.query.pageNumber,
-            req.query.pageSize,
-            req.query.searchLoginTerm,
-            req.query.searchEmailTerm)
+        const pageWithUsers: ContentPageType = await usersService
+            .giveUsersPage(req.query.sortBy,
+                           req.query.sortDirection,
+                           req.query.pageNumber,
+                           req.query.pageSize,
+                           req.query.searchLoginTerm,
+                           req.query.searchEmailTerm)
 
         if (!pageWithUsers) {
             return res.sendStatus(404)
@@ -46,7 +51,7 @@ usersRouter.get('/',
         return res.status(200).send(pageWithUsers)
     })
 
-usersRouter.delete('/:id', // userId
+DELETE('/:id', // userId
     authenticationGuardMiddleware,
     async (req: RequestWithParams<URIParameters>, res: Response) => {
 

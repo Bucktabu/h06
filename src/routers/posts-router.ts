@@ -33,7 +33,8 @@ postsRouter.post('/',
     async (req: RequestWithBody<PostsCreateNewPost>,
            res: Response<PostType | null>) => {
 
-        const newPost = await postsService.createNewPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        const newPost = await postsService
+            .createNewPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
 
         if (!newPost) {
             return res.sendStatus(404)
@@ -43,7 +44,7 @@ postsRouter.post('/',
     }
 )
 
-postsRouter.post('/:id/comments',
+postsRouter.post('/:id/comments', // postId
     authMiddleware,
     ...commentsValidationMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, CreateNewComment>,
@@ -55,7 +56,8 @@ postsRouter.post('/:id/comments',
             return res.sendStatus(404)
         }
 
-        const createdComment = await commentsService.createNewComment(req.params.id, req.body.content, req.user!)
+        const createdComment = await commentsService
+            .createNewComment(req.params.id, req.body.content, req.user!)
 
         if (!createdComment) {
             return res.sendStatus(404)

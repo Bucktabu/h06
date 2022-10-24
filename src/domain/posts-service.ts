@@ -43,8 +43,8 @@ export const postsService = {
         return paginationContentPage(pageNumber, pageSize, content, totalCount)
     },
 
-    async givePostById(id: string): Promise<PostType | null> {
-        return await postsRepository.givePostById(id)
+    async givePostById(postId: string): Promise<PostType | null> {
+        return await postsRepository.givePostById(postId)
     },
 
     async updatePost(id: string,

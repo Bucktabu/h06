@@ -44,14 +44,14 @@ export const blogsRepository = {
         return blog.name
     },
 
-    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        const result = await blogsCollection.updateOne({id: id}, {$set: {name: name, youtubeUrl: youtubeUrl}})
+    async updateBlog(blogId: string, name: string, youtubeUrl: string): Promise<boolean> {
+        const result = await blogsCollection.updateOne({id: blogId}, {$set: {name: name, youtubeUrl: youtubeUrl}})
 
         return result.matchedCount === 1
     },
 
-    async deleteBlogById(id: string): Promise<boolean> {
-        const result = await blogsCollection.deleteOne({id: id})
+    async deleteBlogById(blogId: string): Promise<boolean> {
+        const result = await blogsCollection.deleteOne({id: blogId})
 
         return result.deletedCount === 1
     },

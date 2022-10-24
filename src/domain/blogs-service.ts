@@ -27,24 +27,29 @@ export const blogsService = {
                         sortBy: string,
                         sortDirection: string,
                         pageNumber: string,
-                        pageSize: string): Promise<ContentPageType> {
+                        pageSize: string): Promise<ContentPageType | null> {
 
-        const content = await blogsRepository.giveBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
+        const blogs = await blogsRepository
+            .giveBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
+
+        if (!blogs) {
+            return null
+        }
 
         const totalCount = await blogsRepository.giveTotalCount(searchNameTerm)
 
-        return paginationContentPage(pageNumber, pageSize, content, totalCount)
+        return paginationContentPage(pageNumber, pageSize, blogs, totalCount)
     },
 
-    async giveBlogById(id: string): Promise<BlogType | null> {
-        return await blogsRepository.giveBlogById(id)
+    async giveBlogById(blogId: string): Promise<BlogType | null> {
+        return await blogsRepository.giveBlogById(blogId)
     },
 
-    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        return await blogsRepository.updateBlog(id, name, youtubeUrl)
+    async updateBlog(blogId: string, name: string, youtubeUrl: string): Promise<boolean> {
+        return await blogsRepository.updateBlog(blogId, name, youtubeUrl)
     },
 
-    async deleteBlogById(id: string): Promise<boolean> {
-        return await blogsRepository.deleteBlogById(id)
+    async deleteBlogById(blogId: string): Promise<boolean> {
+        return await blogsRepository.deleteBlogById(blogId)
     },
 }

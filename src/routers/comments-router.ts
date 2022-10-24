@@ -1,14 +1,33 @@
 import {Response, Router} from "express";
+
 import {commentsService} from "../domain/comments-servise";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {commentsValidationMiddleware} from "../middlewares/commentRouter-validation-middleware";
-import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
 import {CommentType} from "../types/comment-type";
+import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
 import {URIParameters} from "../models/URIParameters";
 
 export const commentsRouter = Router({})
 
-commentsRouter.put('/:id', // commentId
+const GET = commentsRouter.get
+const PUT = commentsRouter.put
+const DELETE = commentsRouter.delete
+
+GET('/:id', // commentId
+    async (req: RequestWithParams<URIParameters>,
+           res: Response<CommentType>) => {
+
+        const comment = await commentsService.giveCommentById(req.params.id)
+
+        if (!comment) {
+            return res.sendStatus(404)
+        }
+
+        return res.status(200).send(comment)
+    }
+)
+
+PUT('/:id', // commentId
     authMiddleware,
     ...commentsValidationMiddleware,
     async(req: RequestWithParamsAndBody<URIParameters, CommentType>,
@@ -34,21 +53,7 @@ commentsRouter.put('/:id', // commentId
     }
 )
 
-commentsRouter.get('/:id', // commentId
-    async (req: RequestWithParams<URIParameters>,
-                   res: Response<CommentType>) => {
-
-        const comment = await commentsService.giveCommentById(req.params.id)
-
-        if (!comment) {
-            return res.sendStatus(404)
-        }
-
-        return res.status(200).send(comment)
-    }
-)
-
-commentsRouter.delete('/:id', // commentId
+DELETE('/:id', // commentId
     authMiddleware,
     async (req: RequestWithParams<URIParameters>,
            res: Response) => {

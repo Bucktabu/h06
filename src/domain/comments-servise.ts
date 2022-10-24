@@ -1,11 +1,9 @@
 import {commentsRepository} from "../repositories/comments-repository";
-import {CommentBDType, CommentsType, CommentType} from "../types/comment-type";
+import {CommentType} from "../types/comment-type";
 import {UserDBType} from "../types/user-type";
 import {ContentPageType} from "../types/content-page-type";
-
-import {paginationContentPage} from "../paginationContentPage";
 import {commentBDtoCommentType} from "../helperFunctions";
-import {ObjectId} from "mongodb";
+import {paginationContentPage} from "../paginationContentPage";
 
 export const commentsService = {
     async createNewComment(postId: string, comment: string, user: UserDBType): Promise<CommentType | null> {
@@ -27,13 +25,13 @@ export const commentsService = {
         return commentBDtoCommentType(createdComment)
     },
 
-    async updateComment(id: string, comment: string): Promise<boolean> {
-        return await commentsRepository.updateComment(id, comment)
+    async updateComment(commentId: string, comment: string): Promise<boolean> {
+        return await commentsRepository.updateComment(commentId, comment)
     },
 
-    async giveCommentById(id: string): Promise<CommentType | null> {
+    async giveCommentById(commentId: string): Promise<CommentType | null> {
 
-        const comment = await commentsRepository.giveCommentById(id)
+        const comment = await commentsRepository.giveCommentById(commentId)
 
         if (!comment) {
             return null
@@ -49,18 +47,18 @@ export const commentsService = {
                            userId: string): Promise<ContentPageType | null> {
 
         const commentsDB = await commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, userId)
-        console.log(commentsDB, 'here')
-        if (!commentsDB) {
+
+        if (!commentsDB!.length) {
             return null
         }
 
-        const comments = commentsDB.map(c => commentBDtoCommentType(c))
+        const comments = commentsDB!.map(c => commentBDtoCommentType(c))
         const totalCount = await commentsRepository.giveTotalCount(userId)
 
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)
     },
 
-    async deleteCommentById(id: string): Promise<boolean> {
-        return await commentsRepository.deleteCommentById(id)
+    async deleteCommentById(commentId: string): Promise<boolean> {
+        return await commentsRepository.deleteCommentById(commentId)
     }
 }

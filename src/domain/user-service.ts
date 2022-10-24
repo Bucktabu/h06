@@ -52,8 +52,8 @@ export const usersService = {
         return paginationContentPage(pageNumber, pageSize, users, totalCount)
     },
 
-    async deleteUserById(id: string): Promise<boolean> {
-        return await usersRepository.deleteUserById(id)
+    async deleteUserById(userId: string): Promise<boolean> {
+        return await usersRepository.deleteUserById(userId)
     },
 
     async checkCredential(login: string, password: string): Promise<UserDBType | null> {
