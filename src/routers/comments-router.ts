@@ -13,7 +13,7 @@ const GET = commentsRouter.get
 const PUT = commentsRouter.put
 const DELETE = commentsRouter.delete
 
-GET('/:id', // commentId
+commentsRouter.get('/:id', // commentId
     async (req: RequestWithParams<URIParameters>,
            res: Response<CommentType>) => {
 
@@ -27,7 +27,7 @@ GET('/:id', // commentId
     }
 )
 
-PUT('/:id', // commentId
+commentsRouter.put('/:id', // commentId
     authMiddleware,
     ...commentsValidationMiddleware,
     async(req: RequestWithParamsAndBody<URIParameters, CommentType>,
@@ -53,7 +53,7 @@ PUT('/:id', // commentId
     }
 )
 
-DELETE('/:id', // commentId
+commentsRouter.delete('/:id', // commentId
     authMiddleware,
     async (req: RequestWithParams<URIParameters>,
            res: Response) => {

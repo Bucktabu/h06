@@ -9,7 +9,7 @@ export const authRouter = Router({})
 const POST = authRouter.post
 const GET = authRouter.get
 
-POST('/login',
+authRouter.post('/login',
     authRouterValidation,
     async (req: Request, res: Response) => {
 
@@ -25,7 +25,7 @@ POST('/login',
     }
 )
 
-GET('/me',
+authRouter.get('/me',
     authMiddleware,
     async (req: Request, res: Response) => {
         const aboutMe = usersService.aboutMe(req.user!)

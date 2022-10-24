@@ -19,7 +19,7 @@ const POST = usersRouter.post
 const GET = usersRouter.get
 const DELETE = usersRouter.delete
 
-POST('/',
+usersRouter.post('/',
     authenticationGuardMiddleware,
     userRouterValidationMiddleware,
     async (req: RequestWithBody<CreateNewUser>, res: Response) => {
@@ -33,7 +33,7 @@ POST('/',
         return res.status(201).send(newUser)
     })
 
-GET('/',
+usersRouter.get('/',
     ...usersQueryValidationMiddleware,
     async (req: RequestWithQuery<QueryParameters>, res: Response) => {
         const pageWithUsers: ContentPageType = await usersService
@@ -51,7 +51,7 @@ GET('/',
         return res.status(200).send(pageWithUsers)
     })
 
-DELETE('/:id', // userId
+usersRouter.delete('/:id', // userId
     authenticationGuardMiddleware,
     async (req: RequestWithParams<URIParameters>, res: Response) => {
 

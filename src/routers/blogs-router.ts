@@ -30,7 +30,7 @@ const GET = blogsRouter.get
 const PUT = blogsRouter.put
 const DELETE = blogsRouter.delete
 
-POST('/',
+blogsRouter.post('/',
     authenticationGuardMiddleware,
     ...blogRouterValidation,
     async (req: RequestWithBody<BlogsCreateNewBlog>,
@@ -46,7 +46,7 @@ POST('/',
     }
 )
 
-POST('/:id/posts', // blogId
+blogsRouter.post('/:id/posts', // blogId
     authenticationGuardMiddleware,
     ...postForBlogValidation,
     async (req: RequestWithParamsAndBody<URIParameters, BlogsCreateNewPost>,
@@ -65,7 +65,7 @@ POST('/:id/posts', // blogId
     }
 )
 
-GET('/',
+blogsRouter.get('/',
     ...queryWithNameTermValidation,
     async (req: RequestWithQuery<QueryParameters>,
            res: Response<ContentPageType>) => {
@@ -84,7 +84,7 @@ GET('/',
         res.status(200).send(pageWithBlogs)
 })
 
-GET('/:id', // blogId
+blogsRouter.get('/:id', // blogId
     async (req: RequestWithParams<URIParameters>,
                    res: Response<BlogType>) => {
 
@@ -97,7 +97,7 @@ GET('/:id', // blogId
     res.status(200).send(blog)
 })
 
-GET('/:id/posts',
+blogsRouter.get('/:id/posts',
     ...queryValidationMiddleware,
     async (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
            res: Response<ContentPageType>) => {
@@ -118,7 +118,7 @@ GET('/:id/posts',
     res.status(200).send(pageWithPosts)
 })
 
-PUT('/:id',
+blogsRouter.put('/:id',
     authenticationGuardMiddleware,
     ...blogRouterValidation,
     async (req: RequestWithParamsAndBody<URIParameters, BlogsUpdateBlog>,
@@ -135,7 +135,7 @@ PUT('/:id',
     }
 )
 
-DELETE('/:id',
+blogsRouter.delete('/:id',
     authenticationGuardMiddleware,
     async (req: RequestWithParams<URIParameters>, res: Response) => {
 
