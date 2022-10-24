@@ -1,13 +1,13 @@
 import {Request, Response, Router} from "express";
 import {usersService} from "../domain/user-service";
-import {authRouterValidation} from "../middlewares/authRouter-validation-middleware";
-import {authMiddleware} from "../middlewares/auth-middleware";
+import {getAuthMiddleware,
+        postAuthMiddleware} from "../middlewares/authRouter-validation-middleware";
 import {jwsService} from "../application/jws-service";
 
 export const authRouter = Router({})
 
 authRouter.post('/login',
-    authRouterValidation,
+    postAuthMiddleware,
     async (req: Request, res: Response) => {
 
         const user = await usersService.checkCredential(req.body.login, req.body.password)
@@ -23,7 +23,7 @@ authRouter.post('/login',
 )
 
 authRouter.get('/me',
-    authMiddleware,
+    getAuthMiddleware,
     async (req: Request, res: Response) => {
         const aboutMe = usersService.aboutMe(req.user!)
 

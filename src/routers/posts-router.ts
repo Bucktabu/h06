@@ -1,10 +1,12 @@
 import {Response, Router} from "express";
 
-import {authenticationGuardMiddleware} from "../middlewares/authentication-guard-middleware";
-import {authMiddleware} from "../middlewares/auth-middleware";
-import {commentsValidationMiddleware} from "../middlewares/commentRouter-validation-middleware";
-import {queryValidationMiddleware} from "../middlewares/query-validation-middleware";
-import {postRouterValidation} from "../middlewares/postRouter-validation-middleware";
+import {
+    createCommentForPostMiddleware,
+    createPostMiddleware,
+    deletePostMiddleware,
+    getPostsMiddleware,
+    putPostMiddleware
+} from "../middlewares/postRouter-validation-middleware";
 
 import {commentsService} from "../domain/comments-servise";
 import {postsService} from "../domain/posts-service";
@@ -15,7 +17,7 @@ import {PostsCreateNewPost} from "../models/postsCreateNewPost";
 import {PostsUpdatePost} from "../models/postsUpdatePost";
 import {URIParameters} from "../models/URIParameters";
 
-import {CommentBDType, CommentType} from "../types/comment-type";
+import {CommentType} from "../types/comment-type";
 import {ContentPageType} from "../types/content-page-type";
 import {PostType} from "../types/posts-type";
 import {
@@ -28,8 +30,7 @@ import {
 export const postsRouter = Router({})
 
 postsRouter.post('/',
-    authenticationGuardMiddleware,
-    ...postRouterValidation,
+    createPostMiddleware,
     async (req: RequestWithBody<PostsCreateNewPost>,
            res: Response<PostType | null>) => {
 
@@ -45,8 +46,7 @@ postsRouter.post('/',
 )
 
 postsRouter.post('/:id/comments', // postId
-    authMiddleware,
-    ...commentsValidationMiddleware,
+    createCommentForPostMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, CreateNewComment>,
            res: Response<CommentType>) => {
 
@@ -68,7 +68,7 @@ postsRouter.post('/:id/comments', // postId
 )
 
 postsRouter.get('/',
-    ...queryValidationMiddleware,
+    ...getPostsMiddleware,
     async (req: RequestWithQuery<QueryParameters>,
            res: Response<ContentPageType>) => {
 
@@ -102,7 +102,7 @@ postsRouter.get('/:id', // postId
 )
 
 postsRouter.get('/:id/comments', // postId
-    ...queryValidationMiddleware,
+    ...getPostsMiddleware,
     async (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
            res: Response<ContentPageType>) => {
 
@@ -122,8 +122,7 @@ postsRouter.get('/:id/comments', // postId
 )
 
 postsRouter.put('/:id', // postId
-    authenticationGuardMiddleware,
-    ...postRouterValidation,
+    putPostMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, PostsUpdatePost>,
            res: Response<PostType | null>) => {
 
@@ -144,7 +143,7 @@ postsRouter.put('/:id', // postId
 )
 
 postsRouter.delete('/:id', // postId
-    authenticationGuardMiddleware,
+    deletePostMiddleware,
     async (req: RequestWithParams<URIParameters>,
            res: Response) => {
 

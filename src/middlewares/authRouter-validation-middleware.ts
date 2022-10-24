@@ -1,7 +1,9 @@
 import {body} from "express-validator";
-import {inputValidationMiddleware} from "./input-validation-middleware";
+import {inputValidationResult} from "./input-validation-result";
+import {authMiddleware} from "./auth-middleware";
 
 const loginValidation = body('login').isString().trim()
 const passwordValidation = body('password').isString().trim()
 
-export const authRouterValidation = [loginValidation, passwordValidation, inputValidationMiddleware]
+export const getAuthMiddleware = [authMiddleware]
+export const postAuthMiddleware = [loginValidation, passwordValidation, inputValidationResult]

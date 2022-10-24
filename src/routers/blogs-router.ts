@@ -1,9 +1,11 @@
 import {Response, Router} from "express";
 
-import {blogRouterValidation} from "../middlewares/blogRouter-validation-middleware";
-import {postForBlogValidation} from "../middlewares/postRouter-validation-middleware";
-import {authenticationGuardMiddleware} from "../middlewares/authentication-guard-middleware";
-import {queryValidationMiddleware, queryWithNameTermValidation} from "../middlewares/query-validation-middleware";
+import {
+    deleteBlogMiddleware,
+    getBlogsMiddleware,
+    getPostsForBlogMiddleware,
+    postBlogMiddleware
+} from "../middlewares/blogRouter-validation-middleware";
 
 import {blogsService} from "../domain/blogs-service";
 import {postsService} from "../domain/posts-service";
@@ -26,8 +28,7 @@ import {RequestWithBody,
 export const blogsRouter = Router({})
 
 blogsRouter.post('/',
-    authenticationGuardMiddleware,
-    ...blogRouterValidation,
+    postBlogMiddleware,
     async (req: RequestWithBody<BlogsCreateNewBlog>,
            res: Response<BlogType>) => {
 
@@ -42,8 +43,7 @@ blogsRouter.post('/',
 )
 
 blogsRouter.post('/:id/posts', // blogId
-    authenticationGuardMiddleware,
-    ...postForBlogValidation,
+    postBlogMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, BlogsCreateNewPost>,
            res: Response<PostType>) => {
 
@@ -61,7 +61,7 @@ blogsRouter.post('/:id/posts', // blogId
 )
 
 blogsRouter.get('/',
-    ...queryWithNameTermValidation,
+    ...getBlogsMiddleware,
     async (req: RequestWithQuery<QueryParameters>,
            res: Response<ContentPageType>) => {
 
@@ -93,7 +93,7 @@ blogsRouter.get('/:id', // blogId
 })
 
 blogsRouter.get('/:id/posts',
-    ...queryValidationMiddleware,
+    ...getPostsForBlogMiddleware,
     async (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
            res: Response<ContentPageType>) => {
 
@@ -114,8 +114,7 @@ blogsRouter.get('/:id/posts',
 })
 
 blogsRouter.put('/:id',
-    authenticationGuardMiddleware,
-    ...blogRouterValidation,
+    postBlogMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, BlogsUpdateBlog>,
            res: Response<BlogType | null>) => {
 
@@ -131,7 +130,7 @@ blogsRouter.put('/:id',
 )
 
 blogsRouter.delete('/:id',
-    authenticationGuardMiddleware,
+    deleteBlogMiddleware,
     async (req: RequestWithParams<URIParameters>, res: Response) => {
 
         const isDeleted = await blogsService.deleteBlogById(req.params.id)

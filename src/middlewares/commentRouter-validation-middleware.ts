@@ -1,6 +1,9 @@
 import {body} from "express-validator";
-import {inputValidationMiddleware} from "./input-validation-middleware";
+import {inputValidationResult} from "./input-validation-result";
+import {authMiddleware} from "./auth-middleware";
+import {notYourComment} from "./notYourContentValidation";
 
 export const commentsValidation = body('content').isString().trim().isLength({min: 20, max: 300})
 
-export const commentsValidationMiddleware = [commentsValidation, inputValidationMiddleware]
+export const putCommentMiddleware = [authMiddleware, notYourComment, commentsValidation, inputValidationResult]
+export const deleteCommentMiddleware = [authMiddleware, notYourComment]
