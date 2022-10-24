@@ -1,7 +1,8 @@
 import {Response, Router} from "express";
 
 import {commentsService} from "../domain/comments-servise";
-import {deleteCommentMiddleware, putCommentMiddleware} from "../middlewares/router-validation-middleware/commentRouter-validation-middleware";
+import {authentication} from "../middlewares/validation-middleware/authentication";
+import {commentsValidationMiddleware} from "../middlewares/validation-middleware/commentRouter-validation";
 import {CommentType} from "../types/comment-type";
 import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
 import {URIParameters} from "../models/URIParameters";
@@ -10,7 +11,7 @@ export const commentsRouter = Router({})
 
 commentsRouter.get('/:id', // commentId
     async (req: RequestWithParams<URIParameters>,
-                   res: Response<CommentType>) => {
+           res: Response<CommentType>) => {
 
         const comment = await commentsService.giveCommentById(req.params.id)
 
@@ -23,9 +24,20 @@ commentsRouter.get('/:id', // commentId
 )
 
 commentsRouter.put('/:id', // commentId
-    putCommentMiddleware,
+    authentication,
+    ...commentsValidationMiddleware,
     async(req: RequestWithParamsAndBody<URIParameters, CommentType>,
-          res: Response<CommentType>) => {
+           res: Response<CommentType>) => {
+
+        const comment = await commentsService.giveCommentById(req.params.id)
+
+        if (!comment) {
+            return res.sendStatus(404)
+        }
+
+        if (comment!.userId !== req.user!.id) {
+            return res.sendStatus(403) //	If try edit the comment that is not your own
+        }
 
         const isUpdate = await commentsService.updateComment(req.params.id, req.body.content)
 
@@ -33,15 +45,24 @@ commentsRouter.put('/:id', // commentId
             return res.sendStatus(404)
         }
 
-        const updatedComment = await commentsService.giveCommentById(req.params.id)
-        return res.status(204).send(updatedComment!)
+        return res.status(204).send(comment!)
     }
 )
 
 commentsRouter.delete('/:id', // commentId
-    deleteCommentMiddleware,
+    authentication,
     async (req: RequestWithParams<URIParameters>,
            res: Response) => {
+
+        const comment = await commentsService.giveCommentById(req.params.id)
+
+        if (!comment) {
+            return res.sendStatus(404)
+        }
+
+        if (comment.userId !== req.user!.id) {
+            return res.sendStatus(403) //	If try edit the comment that is not your own
+        }
 
         const isDeleted = await commentsService.deleteCommentById(req.params.id)
 

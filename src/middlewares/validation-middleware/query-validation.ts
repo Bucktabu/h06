@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response} from "express";
-import {SortDirection, SortParameters} from "../models/sortParameters";
-import {URIParameters} from "../models/URIParameters";
-import {RequestWithParamsAndQuery} from "../types/request-types";
-import {QueryParameters} from "../models/queryParameters";
+import {SortDirection, SortParameters} from "../../models/sortParameters";
+import {URIParameters} from "../../models/URIParameters";
+import {RequestWithParamsAndQuery} from "../../types/request-types";
+import {QueryParameters} from "../../models/queryParameters";
 
 const sortByValidation = (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
                           res: Response,
@@ -116,6 +116,6 @@ const searchEmailTermValidation = ((req: Request<{}, {}, {}, {searchEmailTerm: s
     next()
 })
 
-export const queryValidationMiddleware = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation]
+export const queryValidation = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation]
 export const queryWithNameTermValidation = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation, searchNameTermValidation]
 export const usersQueryValidationMiddleware = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation, searchEmailTermValidation, searchLoginTermValidation]

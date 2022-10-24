@@ -1,10 +1,8 @@
 import {Response, Router} from "express";
 
-import {
-    deleteUserMiddleware,
-    getUserMiddleware,
-    postUserMiddleware,
-} from "../middlewares/router-validation-middleware/userRouter-validation-middleware";
+import {authenticationGuard} from "../middlewares/validation-middleware/authentication-guard";
+import {userRouterValidation} from "../middlewares/validation-middleware/userRouter-validation";
+import {usersQueryValidationMiddleware} from "../middlewares/validation-middleware/query-validation";
 
 import {usersService} from "../domain/user-service";
 
@@ -17,8 +15,10 @@ import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/req
 
 export const usersRouter = Router({})
 
+
 usersRouter.post('/',
-    postUserMiddleware,
+    authenticationGuard,
+    userRouterValidation,
     async (req: RequestWithBody<CreateNewUser>, res: Response) => {
 
         const newUser = await usersService.createNewUser(req.body.login, req.body.password, req.body.email)
@@ -31,7 +31,7 @@ usersRouter.post('/',
     })
 
 usersRouter.get('/',
-    ...getUserMiddleware,
+    ...usersQueryValidationMiddleware,
     async (req: RequestWithQuery<QueryParameters>, res: Response) => {
         const pageWithUsers: ContentPageType = await usersService
             .giveUsersPage(req.query.sortBy,
@@ -49,7 +49,7 @@ usersRouter.get('/',
     })
 
 usersRouter.delete('/:id', // userId
-    deleteUserMiddleware,
+    authenticationGuard,
     async (req: RequestWithParams<URIParameters>, res: Response) => {
 
         const isDeleted = await usersService.deleteUserById(req.params.id)
