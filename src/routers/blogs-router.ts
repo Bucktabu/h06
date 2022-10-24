@@ -1,6 +1,7 @@
 import {Response, Router} from "express";
 
 import {
+    createPostForBlogMiddleware,
     deleteBlogMiddleware,
     getBlogsMiddleware,
     getPostsForBlogMiddleware,
@@ -43,7 +44,7 @@ blogsRouter.post('/',
 )
 
 blogsRouter.post('/:id/posts', // blogId
-    postBlogMiddleware,
+    createPostForBlogMiddleware,
     async (req: RequestWithParamsAndBody<URIParameters, BlogsCreateNewPost>,
            res: Response<PostType>) => {
 
