@@ -1,5 +1,4 @@
 import {body} from "express-validator";
-import {inputValidation} from "./input-validation";
 import {blogsRepository} from "../../repositories/blogs-repository";
 
 const titleValidation = body('title').isString().trim().isLength({min: 3, max: 30})
@@ -17,8 +16,5 @@ export const blogIdValidation = body('blogId').isString()
         return true
     })
 
-export const postRouterValidation = [titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidation]
-
-//xport const postForBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation, inputValidation]
-
 export const bodyPostValidationForBlogsRouter = [titleValidation, shortDescriptionValidation, contentValidation]
+export const bodyPostValidationForPostsRouter = [titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation]
