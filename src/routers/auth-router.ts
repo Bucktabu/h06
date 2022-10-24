@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {usersService} from "../domain/user-service";
 import {getAuthMiddleware,
-        postAuthMiddleware} from "../middlewares/authRouter-validation-middleware";
+        postAuthMiddleware} from "../middlewares/router-validation-middleware/authRouter-validation-middleware";
 import {jwsService} from "../application/jws-service";
 
 export const authRouter = Router({})

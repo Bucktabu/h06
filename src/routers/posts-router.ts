@@ -6,7 +6,7 @@ import {
     deletePostMiddleware,
     getPostsMiddleware,
     putPostMiddleware
-} from "../middlewares/postRouter-validation-middleware";
+} from "../middlewares/router-validation-middleware/postRouter-validation-middleware";
 
 import {commentsService} from "../domain/comments-servise";
 import {postsService} from "../domain/posts-service";

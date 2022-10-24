@@ -1,7 +1,7 @@
 import {Response, Router} from "express";
 
 import {commentsService} from "../domain/comments-servise";
-import {deleteCommentMiddleware, putCommentMiddleware} from "../middlewares/commentRouter-validation-middleware";
+import {deleteCommentMiddleware, putCommentMiddleware} from "../middlewares/router-validation-middleware/commentRouter-validation-middleware";
 import {CommentType} from "../types/comment-type";
 import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
 import {URIParameters} from "../models/URIParameters";

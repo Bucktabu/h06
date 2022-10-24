@@ -4,7 +4,7 @@ import {
     deleteUserMiddleware,
     getUserMiddleware,
     postUserMiddleware,
-} from "../middlewares/userRouter-validation-middleware";
+} from "../middlewares/router-validation-middleware/userRouter-validation-middleware";
 
 import {usersService} from "../domain/user-service";
 

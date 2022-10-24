@@ -1,10 +1,10 @@
 import {body} from "express-validator";
-import {inputValidationResult} from "./input-validation-result";
-import {blogsRepository} from "../repositories/blogs-repository";
-import {authenticationGuard} from "./authentication-guard";
-import {authMiddleware} from "./auth-middleware";
+import {inputValidationResult} from "../input-validation-result";
+import {blogsRepository} from "../../repositories/blogs-repository";
+import {authenticationGuard} from "../authentication-guard";
+import {authMiddleware} from "../auth-middleware";
 import {commentsValidation} from "./commentRouter-validation-middleware";
-import {queryValidationMiddleware} from "./query-validation-middleware";
+import {queryValidationMiddleware} from "../query-validation-middleware";
 
 const titleValidation = body('title').isString().trim().isLength({min: 3, max: 30})
 const shortDescriptionValidation = body('shortDescription').isString().trim().isLength({min: 3, max: 100})
@@ -22,7 +22,7 @@ export const blogIdValidation = body('blogId').isString()
     })
 
 export const createPostMiddleware = [authenticationGuard, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationResult]
-export const createCommentForPostMiddleware = [authMiddleware, commentsValidation]
-export const getPostsMiddleware = [...queryValidationMiddleware]
+export const createCommentForPostMiddleware = [authMiddleware, commentsValidation, inputValidationResult]
+export const getPostsMiddleware = [...queryValidationMiddleware, inputValidationResult]
 export const putPostMiddleware = [authenticationGuard, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationResult]
 export const deletePostMiddleware = [authenticationGuard]

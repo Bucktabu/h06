@@ -5,7 +5,7 @@ import {
     getBlogsMiddleware,
     getPostsForBlogMiddleware,
     postBlogMiddleware
-} from "../middlewares/blogRouter-validation-middleware";
+} from "../middlewares/router-validation-middleware/blogRouter-validation-middleware";
 
 import {blogsService} from "../domain/blogs-service";
 import {postsService} from "../domain/posts-service";
