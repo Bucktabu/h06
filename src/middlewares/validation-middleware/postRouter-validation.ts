@@ -19,4 +19,6 @@ export const blogIdValidation = body('blogId').isString()
 
 export const postRouterValidation = [titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidation]
 
-export const postForBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation, inputValidation]
+//xport const postForBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation, inputValidation]
+
+export const bodyPostValidationForBlogsRouter = [titleValidation, shortDescriptionValidation, contentValidation]
